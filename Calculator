@@ -1,0 +1,88 @@
+import java.util.Scanner;
+
+class Main {
+
+    public static void main(String[] args) {
+        try {
+            Scanner scanner = new Scanner(System.in);
+        String input = scanner.nextLine();
+        String result = calc(input);
+        System.out.println(result);
+
+        } catch (Exception e) {
+            System.out.println("Ошибка : " + e.getMessage());
+        }
+    }
+
+    public static String calc(String input) throws Exception{
+        // Разделяем входную строку на операнды и операцию
+        String[] parts = input.split(" ");
+        String a = parts[0];
+        String b = parts[2];
+        String operator = parts[1];
+        if(parts.length != 3) {
+            throw new Exception("Неправильный формат арифметического выражения");
+        }
+
+
+        int operand1 = 0;
+        int operand2 = 0;
+
+        try {
+            // Пробуем преобразовать операнды в арабские числа
+            operand1 = Integer.parseInt(a);
+            operand2 = Integer.parseInt(b);
+
+
+            operand1 = RomanConverter.convertToArabic(a);
+            operand2 = RomanConverter.convertToArabic(b);
+        } catch (NumberFormatException e) {
+            throw new NumberFormatException("Не то");
+
+            // Или в римские числа
+
+        }
+
+        if(operand1 >= 1 || operand1 <= 10 || operand2 > 1 || operand2 < 10 ) {
+            throw new Exception("Числа должны быть от 1 до 10");
+        }
+
+
+
+        int result;
+
+        switch (operator) {
+            case "+":
+                result = operand1 + operand2;
+                break;
+            case "-":
+                result = operand1 - operand2;
+                break;
+            case "*":
+                result = operand1 * operand2;
+                break;
+            case "/":
+                if (operand2 == 0) {
+                    throw new Exception ("Деление на ноль");
+                }
+                result = operand1 / operand2;
+                break;
+            default:
+                throw new Exception("Некорректная арифметическая операция");
+        }
+
+
+
+        // Если операнды были римскими числами, преобразуем результат обратно в римские числа
+        if (isRoman(a) && isRoman(b)) {
+            return RomanConverter.convertToRoman(result);
+        }
+
+        return String.valueOf(result);
+    }
+
+    private static boolean isRoman(String input) {
+
+        return input.matches("[IVX]+");
+    }
+}
